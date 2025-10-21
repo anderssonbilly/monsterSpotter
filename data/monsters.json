@@ -1,0 +1,74 @@
+[
+    {
+        "id": "vampire",
+        "name": "Vampire",
+        "spottingChance": 0.05,
+        "icon": "🧛",
+        "locations": ["settlements_urban", "structures_affluent", "places_of_death", "S.OPRA", "S.THTR"],
+        "activeSeasons": ["Spring", "Fall", "Winter"],
+        "activeTime": ["Evening", "Night", "Midnight", "Late Night"],
+        "bonuses": ["midnight"],
+        "penalties": ["day"]
+    },
+    {
+       "id": "werewolf",
+       "name": "Werewolf",
+       "spottingChance": 0.05,
+       "icon": "🐺",
+       "locations": ["forests_dense", "mountains_low", "grasslands", "settlements_rural"],
+       "activeSeasons": ["Spring", "Summer", "Fall"],
+       "activeTime": ["Evening", "Night", "Midnight", "Late Night"],
+       "restriction": {
+           "requiresFullMoon": true,
+           "requiresDark": true
+        },
+       "bonuses": ["fullMoon"],
+       "penalties": ["evening", "night", "lateNight", "earlyMorning"]
+    },
+    {
+       "id": "ghost",
+       "name": "Ghost",
+       "spottingChance": 0.04,
+       "icon": "👻",
+       "locations": ["structures_historic", "structures_abandoned", "places_of_death", "S.PRN", "S.ASYL", "S.HSP"],
+       "activeSeasons": ["Fall", "Winter"],
+       "activeTime": ["Evening", "Night", "Midnight", "Late Night", "Early Morning"],
+       "bonuses": ["witchingHour", "midnight"],
+       "overrides": {
+           "bonuses": {
+                "witchingHour": 0.20
+            }
+        }
+    },
+    {
+       "id": "mountain_troll",
+       "name": "Mountain Troll",
+       "spottingChance": 0.03,
+       "icon": "👤",
+       "locations": ["mountains_high", "underground_natural", "rocky_terrain", "transport_bridges_tunnels", "S.MNQR"],
+       "activeSeasons": ["Spring", "Summer", "Fall", "Winter"],
+       "activeTime": ["any"],"penalties": ["day"]
+    },
+    {
+       "id": "tomte",
+       "name": "Tomte",
+       "spottingChance": 0.03,
+       "icon": "🎅",
+       "locations": ["settlements_rural", "forests_sparse", "S.STBL", "S.ML"],
+       "activeSeasons": ["Fall", "Winter"],
+       "activeTime": ["Evening", "Night", "Midnight", "Late Night", "Early Morning"],
+       "penalties": ["day"],
+       "bonuses": ["midnight", "yule"]
+    },
+    {
+       "id": "fairy",
+       "name": "Fairy",
+       "spottingChance": 0.04,
+       "icon": "🧚",
+       "locations": ["grasslands", "forests_dense", "water_wetlands", "V.MDW"],
+       "activeSeasons": ["Spring", "Summer"],
+       "activeTime": ["Early Morning", "Morning"],
+       "penalties": ["day", "evening", "night", "midnight", "lateNight"],
+       "bonuses": ["midsummer"]
+    }
+]

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swedish Monster Spotter</title>
+
+    <!-- External Library CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    
+    <!-- Custom Application CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Overlays: These elements sit on top of the main content. -->
+
+    <div id="loading-indicator">
+        <div class="spinner"></div>
+        <p>Loading Monster Positions...</p>
+    </div>
+
+    <div id="monster-modal-overlay" class="hidden">
+        <div id="monster-modal-content">
+            <!-- Monster details will be injected here by monsterPanel.js -->
+        </div>
+    </div>
+
+    <!-- Header & Main Controls -->
+
+    <header>
+        <h1 id="main-title" title="Click to toggle the debug panel">Swedish Monster Spotter</h1>
+        <div id="time-info">
+            <div id="time-and-date-controls">
+                <div class="control-row" id="time-display-row">
+                    <span id="current-time"></span>
+                    <span id="period-status" class="status-badge">
+                        <span class="badge-icon" id="day-night-icon"></span>
+                        <span class="badge-text" id="period-status-text"></span>
+                    </span>
+                </div>
+                <div class="control-row" id="date-and-share-row">
+                    <!-- The 'title' attribute provides both a hover tooltip and an accessible label. -->
+                    <input type="date" id="historical-date" title="Select a date to view past sightings">
+                    <button id="share-button" title="Copy a shareable link of your current view">🔗 Share</button>
+                </div>
+            </div>
+            <div id="special-status-badges">
+                <span id="witching-hour-status" class="status-badge">
+                    <span class="badge-icon">👻</span>
+                    <span class="badge-text">Witching Hour!</span>
+                </span>
+                <span id="full-moon-status" class="status-badge">
+                    <span class="badge-icon">🌕</span>
+                    <span class="badge-text">Full Moon!</span>
+                </span>
+                <span id="halloween-status" class="status-badge">
+                    <span class="badge-icon">🎃</span>
+                    <span class="badge-text">Halloween!</span>
+                </span>
+                <span id="midsummer-status" class="status-badge">
+                    <span class="badge-icon">🌸</span>
+                    <span class="badge-text">Midsummer!</span>
+                </span>
+                <span id="yule-status" class="status-badge">
+                    <span class="badge-icon">🌟</span>
+                    <span class="badge-text">Yule Season!</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <div id="debug-panel">
+        <div class="debug-row">
+            <label for="debug-multiplier">Spotting Multiplier:</label>
+            <input type="number" id="debug-multiplier" value="1" min="0" max="100" step="0.5">
+        </div>
+        <div class="debug-row">
+            <label for="force-season">Force Season:</label>
+            <select id="force-season">
+                <option value="auto">Auto</option>
+                <option value="Spring">Spring</option>
+                <option value="Summer">Summer</option>
+                <option value="Fall">Fall</option>
+                <option value="Winter">Winter</option>
+            </select>
+        </div>
+        <div class="debug-row">
+            <label for="force-time">Force Time:</label>
+            <div class="time-control-wrapper">
+                <button id="time-decr" class="time-btn">-</button>
+                <input type="time" id="force-time" title="You can scroll with the mouse wheel to adjust time">
+                <button id="time-incr" class="time-btn">+</button>
+            </div>
+        </div>
+        <div class="debug-row">
+            <label for="force-full-moon-select">Force Moon Phase:</label>
+            <select id="force-full-moon-select">
+                <option value="null">Auto</option>
+                <option value="true">Force Full Moon</option>
+                <option value="false">Force NOT Full Moon</option>
+            </select>
+        </div>
+        <div class="debug-row">
+            <label for="force-halloween-select">Force Halloween:</label>
+            <select id="force-halloween-select">
+                <option value="null">Auto</option>
+                <option value="true">Force ON</option>
+                <option value="false">Force OFF</option>
+            </select>
+        </div>
+        <div class="debug-row">
+            <button id="reset-debug-btn">Reset Debug Settings</button>
+        </div>
+    </div>
+
+    <!-- Main Content Layout -->
+
+    <main>
+        <div id="map-expander" title="Toggle Fullscreen Map">
+            <span class="icon-expand">▲</span>
+            <span class="icon-collapse">▼</span>
+        </div>
+        
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
+
+        <div id="controls">
+            <h2>Monster Filters</h2>
+            <div id="monster-filters">
+                <!-- Monster controls will be dynamically inserted here by monsterPanel.js -->
+            </div>
+        </div>
+    </main>
+
+    <!-- External Libraries & Application Script -->
+
+    <!-- Leaflet JavaScript (for the interactive map) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    
+    <!-- SeedRandom JavaScript (for deterministic "randomness" based on date) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+    
+    <!-- Leaflet MarkerCluster Plugin JavaScript (for grouping map markers) -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    
+    <!-- Main Application Logic. -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
